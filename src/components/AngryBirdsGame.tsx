@@ -25,12 +25,12 @@ const AngryBirdsGame = () => {
       
       if (!canvasRef.current) return;
       
-      // 🏗️ 문제 2 해결: 완전 안정적인 물리 엔진
+      // 🚀 극한 탄성력: 초강력 물리 엔진
       const engine = Matter.Engine.create();
-      engine.world.gravity.y = 0.5; // 중력 대폭 감소 (안정성)
+      engine.world.gravity.y = 0.3; // 중력 더욱 감소 (멀리 날아감)
       engine.timing.timeScale = 1.0;
-      engine.positionIterations = 8; // 위치 정확도 증가
-      engine.velocityIterations = 6; // 속도 정확도 증가
+      engine.positionIterations = 10; // 위치 정확도 최대
+      engine.velocityIterations = 8; // 속도 정확도 최대
       engineRef.current = engine;
       
       // 렌더러 생성
@@ -116,13 +116,13 @@ const AngryBirdsGame = () => {
         }
       }
       
-      // 💥 장력 강화: 파괴력 극대화된 새
-      const bird = Matter.Bodies.circle(150, 400, 14, {
+      // 🚀 극한 탄성력: 초강력 새
+      const bird = Matter.Bodies.circle(150, 400, 16, {
         render: { fillStyle: '#FF4444' },
         label: 'bird',
-        density: 0.035, // 더욱 강력하게!
-        frictionAir: 0.003, // 공기 저항 감소
-        restitution: 0.9, // 튕김력 최대
+        density: 0.05, // 극한 밀도!
+        frictionAir: 0.001, // 공기 저항 극소
+        restitution: 0.95, // 최대 튕김력
         inertia: Infinity // 회전 관성 무한대 (관통력 증가)
       });
       currentBirdRef.current = bird;
@@ -290,8 +290,8 @@ const AngryBirdsGame = () => {
           const stretchDistance = Math.sqrt(dx * dx + dy * dy);
           console.log(`🏹 새총 당긴 거리: ${stretchDistance.toFixed(2)}px`);
           
-          // 🔥 장력 강화: 발사력 10배 증가!
-          const elasticPower = Math.min(stretchDistance * 0.008, 0.25); // 10배 증가!
+          // 🚀 극한 탄성력: 발사력 20배 증가!
+          const elasticPower = Math.min(stretchDistance * 0.015, 0.4); // 20배 증가!
           
           // 정규화된 방향 벡터
           const normalizedDx = dx / stretchDistance;
@@ -326,12 +326,12 @@ const AngryBirdsGame = () => {
                   console.log('🗑️ 이전 새 제거됨');
                 }
                 
-                const newBird = Matter.Bodies.circle(150, 400, 14, {
+                const newBird = Matter.Bodies.circle(150, 400, 16, {
                   render: { fillStyle: '#FF4444' },
                   label: 'bird',
-                  density: 0.035, // 더욱 강력하게!
-                  frictionAir: 0.003, // 공기 저항 감소
-                  restitution: 0.9, // 튕김력 최대
+                  density: 0.05, // 극한 밀도!
+                  frictionAir: 0.001, // 공기 저항 극소
+                  restitution: 0.95, // 최대 튕김력
                   inertia: Infinity
                 });
                 
@@ -398,13 +398,14 @@ const AngryBirdsGame = () => {
             );
             ctx.stroke();
             
-            // 🔥 장력 표시 강화 (당긴 거리에 따라 색상 변화)
+            // 🚀 극한 장력 표시 (당긴 거리에 따라 강력한 시각화)
             const distance = Math.sqrt((birdPos.x - slingshotPos.x) ** 2 + (birdPos.y - slingshotPos.y) ** 2);
-            const tension = Math.min(distance / 80, 1); // 더 민감하게 반응
+            const tension = Math.min(distance / 60, 1); // 더욱 민감하게 반응
             const red = Math.floor(255 * tension);
             const green = Math.floor(255 * (1 - tension));
-            ctx.strokeStyle = `rgb(${red}, ${green}, 0)`;
-            ctx.lineWidth = Math.max(3, Math.floor(tension * 8)); // 장력에 따라 선 굵기 변화
+            const blue = Math.floor(100 * tension); // 파워를 나타내는 파란색 추가
+            ctx.strokeStyle = `rgb(${red}, ${green}, ${blue})`;
+            ctx.lineWidth = Math.max(4, Math.floor(tension * 12)); // 장력에 따라 더 굵은 선
             
             // 장력 라인
             ctx.setLineDash([5, 5]);
@@ -500,15 +501,15 @@ const AngryBirdsGame = () => {
 
       {/* 게임 설명 */}
       <div className="mt-4 text-sm text-gray-600 text-center">
-        🎯 <strong>최강 앵그리버드 (장력 10배 강화!):</strong> <br />
-        🔥 <strong>슈퍼 파워 장력</strong>: 발사력 10배 증가! 목표물까지 강력하게 도달! <br />
-        🎨 <strong>완벽한 새줄 시스템</strong>: 발사 후 새줄 완전히 사라짐! 장력에 따라 색상 + 굵기 변화! <br />
-        🏗️ <strong>완전 안정적인 구조물</strong>: 시작 시 절대 무너지지 않는 물리 엔진! <br />
-        💥 <strong>파괴력 극대화</strong>: 밀도 35% 증가, 공기 저항 감소, 튕김력 최대! <br />
+        🎯 <strong>극한 앵그리버드 (탄성력 20배 강화!):</strong> <br />
+        🚀 <strong>극한 탄성력</strong>: 발사력 20배 증가! 새가 화면 끝까지 날아감! <br />
+        ⚡ <strong>초강력 새</strong>: 밀도 50% 증가, 공기 저항 99% 감소, 크기 증가! <br />
+        🎨 <strong>완벽한 새줄 시스템</strong>: 파워에 따라 RGB 색상 변화! 굵기 최대 12px! <br />
+        🌟 <strong>낮은 중력</strong>: 0.3 중력으로 새가 더 멀리 포물선을 그리며 날아감! <br />
+        💥 <strong>극한 파괴력</strong>: 모든 블록을 날려버리는 초강력 임펄스! <br />
         🐷 돼지 맞추면 <strong>500-700점</strong>, 블록 파괴 시 <strong>100점</strong>! <br />
-        🚀 <strong>강력한 임펄스</strong>: 블록을 밀고 나가며 완전 파괴! <br />
-        🎪 <strong>모든 버그 수정</strong>: 새줄 따라가기, 구조물 무너짐, 약한 장력 모두 해결! <br />
-        📱 콘솔(F12)에서 모든 물리 효과를 실시간 확인 가능!
+        🎮 <strong>재미 극대화</strong>: 이제 정말 멀리 날아가서 재미있게 플레이! <br />
+        📱 콘솔(F12)에서 극한 물리 효과를 실시간 확인 가능!
       </div>
     </div>
   );
