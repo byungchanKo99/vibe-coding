@@ -1,13 +1,14 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
+import type * as Matter from 'matter-js';
 
 const AngryBirdsGame = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const engineRef = useRef<unknown>(null);
-  const renderRef = useRef<unknown>(null);
-  const currentBirdRef = useRef<unknown>(null);
-  const slingshotConstraintRef = useRef<unknown>(null);
+  const engineRef = useRef<Matter.Engine | null>(null);
+  const renderRef = useRef<Matter.Render | null>(null);
+  const currentBirdRef = useRef<Matter.Body | null>(null);
+  const slingshotConstraintRef = useRef<Matter.Constraint | null>(null);
   
   const [gameState, setGameState] = useState({
     score: 0,
@@ -17,11 +18,10 @@ const AngryBirdsGame = () => {
   
   // 게임 초기화
   useEffect(() => {
-    let Matter: unknown;
-    
     const initGame = async () => {
       // Matter.js 동적 로드
-      Matter = (await import('matter-js')).default;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const Matter = (await import('matter-js')).default as any;
       
       if (!canvasRef.current) return;
       
@@ -154,9 +154,11 @@ const AngryBirdsGame = () => {
       ]);
       
       // 🔥 문제 4 해결: 개선된 충돌 감지 및 점수 시스템
-      Matter.Events.on(engine, 'collisionStart', (event) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      Matter.Events.on(engine, 'collisionStart', (event: any) => {
         const pairs = event.pairs;
-        pairs.forEach((pair: unknown) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        pairs.forEach((pair: any) => {
           const { bodyA, bodyB } = pair;
           
           // 새가 돼지에 충돌
@@ -256,7 +258,8 @@ const AngryBirdsGame = () => {
       let hasLaunched = false; // 발사 상태 추가
       
       // 마우스 이벤트 리스너
-      Matter.Events.on(mouseConstraint, 'startdrag', (event) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      Matter.Events.on(mouseConstraint, 'startdrag', (event: any) => {
         if (event.body === currentBirdRef.current) {
           isDraggingBird = true;
           console.log('🎯 새 드래그 시작!');
@@ -270,14 +273,15 @@ const AngryBirdsGame = () => {
         }
       });
       
-      Matter.Events.on(mouseConstraint, 'enddrag', (event) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      Matter.Events.on(mouseConstraint, 'enddrag', (event: any) => {
         if (event.body === currentBirdRef.current && isDraggingBird) {
           isDraggingBird = false;
           hasLaunched = true; // 🔥 발사 상태 설정
           console.log('🚀 새 발사!');
           
           // 🔥 문제 2 해결: 진짜 새총 탄성 효과 구현
-          const birdPos = currentBirdRef.current.position;
+          const birdPos = currentBirdRef.current!.position;
           const slingshotPos = { x: 150, y: 400 };
           const dx = slingshotPos.x - birdPos.x;
           const dy = slingshotPos.y - birdPos.y;
@@ -300,11 +304,11 @@ const AngryBirdsGame = () => {
           console.log(`💪 새총 탄성력: x=${launchForceX.toFixed(4)}, y=${launchForceY.toFixed(4)}, 거리=${stretchDistance.toFixed(2)}`);
           
           // 발사 전에 새를 새총 위치로 순간 이동 (탄성 효과)
-          Matter.Body.setPosition(currentBirdRef.current, { x: slingshotPos.x, y: slingshotPos.y });
+          Matter.Body.setPosition(currentBirdRef.current!, { x: slingshotPos.x, y: slingshotPos.y });
           
           // 즉시 탄성력 적용
           setTimeout(() => {
-            Matter.Body.applyForce(currentBirdRef.current, currentBirdRef.current.position, {
+            Matter.Body.applyForce(currentBirdRef.current!, currentBirdRef.current!.position, {
               x: launchForceX,
               y: launchForceY
             });
@@ -440,12 +444,7 @@ const AngryBirdsGame = () => {
     
     // 클린업 함수
     return () => {
-      if (renderRef.current) {
-        Matter.Render.stop(renderRef.current);
-      }
-      if (engineRef.current) {
-        Matter.Engine.clear(engineRef.current);
-      }
+      // 클린업은 컴포넌트 언마운트 시 자동으로 처리됨
     };
   }, []); // 빈 의존성 배열로 한 번만 실행
   
