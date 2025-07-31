@@ -4,10 +4,10 @@ import { useRef, useEffect, useState } from 'react';
 
 const AngryBirdsGame = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const engineRef = useRef<any>(null);
-  const renderRef = useRef<any>(null);
-  const currentBirdRef = useRef<any>(null);
-  const slingshotConstraintRef = useRef<any>(null);
+  const engineRef = useRef<unknown>(null);
+  const renderRef = useRef<unknown>(null);
+  const currentBirdRef = useRef<unknown>(null);
+  const slingshotConstraintRef = useRef<unknown>(null);
   
   const [gameState, setGameState] = useState({
     score: 0,
@@ -17,7 +17,7 @@ const AngryBirdsGame = () => {
   
   // 게임 초기화
   useEffect(() => {
-    let Matter: any;
+    let Matter: unknown;
     
     const initGame = async () => {
       // Matter.js 동적 로드
@@ -156,7 +156,7 @@ const AngryBirdsGame = () => {
       // 🔥 문제 4 해결: 개선된 충돌 감지 및 점수 시스템
       Matter.Events.on(engine, 'collisionStart', (event) => {
         const pairs = event.pairs;
-        pairs.forEach((pair: any) => {
+        pairs.forEach((pair: unknown) => {
           const { bodyA, bodyB } = pair;
           
           // 새가 돼지에 충돌
